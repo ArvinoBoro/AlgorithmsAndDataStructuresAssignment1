@@ -1,6 +1,37 @@
 class Matrix:
-    pass
+    
+    def __init__(self, file_name):
+        try:
+            self._fp = open(file_name, 'r+')
+        except: 
+            print("\nError: File not found.\n")
+            return None
+        
+        self._product_data_raw = self._fp.read()
+        self._product_data_organized = []
+        entry = []
+        datum = str()
+        
+        for i in range(len(self._product_data_raw)):
+                if self._product_data_raw[i] == '\n':
+                    entry.append(datum)
+                    self._product_data_organized.append(entry)
+                    entry = []
+                    datum = ""
+                elif self._product_data_raw[i] == ',' and self._product_data_raw[i+1] == ' ':
+                    i += 1
+                    entry.append(datum)
+                    datum = ""
+                else:
+                    datum += self._product_data_raw[i]
 
+        if datum:
+            entry.append(datum)
+            self._product_data_organized.append(entry)
+
+        print("\nData load successful.\n")
+
+                     
 def main():
 
     print("\nWelcome to Arvin's Advanced Shopping-Data Mangement System.")
@@ -24,7 +55,7 @@ def main():
             break
 
         elif user_option == 1: # Load product data
-            matrix = Matrix()
+            matrix = Matrix("product_data.txt")
 
         elif user_option == 2:
             if 'matrix' in globals():
@@ -69,10 +100,10 @@ def main():
                 #matrix.sort()
                 pass
             else: 
-                print(\n"Error: Data must be loaded first")
+                print("\nError: Data must be loaded first\n")
 
         else: 
-            print("Error: Invalid input")
+            print("\nError: Invalid input\n")
 
 
 if __name__=='__main__': 
