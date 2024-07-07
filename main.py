@@ -60,6 +60,36 @@ class Matrix:
         product.append(category)
 
         self._product_data_organized.insert(position - 1, product)
+
+    def update(self, line_number):
+        
+        print(f"\nEnter the new attributes of product {line_number}. Press return for an attribute to remain unchanged.\n")
+        name = str(input("Name: "))
+        price = str(input("Price: "))
+        category = str(input("Category: "))
+        identifier = str(input("ID: "))
+        
+        if not name == '\n':
+            self._product_data_organized[line_number - 1][1] = name
+        if not price == '\n':
+            self._product_data_organized[line_number - 1][2] = price
+        if not category == '\n': 
+            self._product_data_organized[line_number - 1][3] = category
+        if not identifier == '\n':
+            self._product_data_organized[line_number - 1][0] = identifier 
+            print("\n")
+
+    def delete(self, line_number):  
+        if not isinstance(line_number, int):
+            print("Error: Input is not an integer.")
+            return None
+
+        if line_number > len(self._product_data_organized) or line_number < 1:
+            print("Error: Invalid index \n")
+            return None
+            
+        del self._product_data_organized[line_number - 1]
+    
                          
 def main():
 
@@ -99,17 +129,15 @@ def main():
 
         elif user_option == 4: # Update 
             if 'matrix' in locals():
-                #line_number = int(input("Line number: "))
-                #matrix.update(line_number)
-                pass
+                line_number = int(input("Product position: "))
+                matrix.update(line_number)
             else: 
                 print("Error: Data must be loaded first")
 
-        elif user_option == 5: # Delete 
+        elif user_option == 5: 
             if 'matrix' in locals():
-                #line_number = int(input("Line number: "))
-                #matrix.delete(line_number)
-                pass
+                line_number = int(input("Line number: "))
+                matrix.delete(line_number)
             else: 
                 print("Error: Data must be loaded first")
 
@@ -122,7 +150,7 @@ def main():
             else: 
                 print("Error: Data must be loaded first")
 
-        elif user_option == 7: # Search
+        elif user_option == 7: # Sort
             if 'matrix' in locals():
                 #matrix.sort()
                 pass
