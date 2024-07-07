@@ -2,12 +2,12 @@ class Matrix:
     
     def __init__(self, file_name):
         try:
-            self._fp = open(file_name, 'r+')
+            fp = open(file_name, 'r+')
         except: 
             print("\nError: File not found.\n")
             return None
         
-        self._product_data_raw = self._fp.read()
+        self._product_data_raw = fp.read()
         self._product_data_organized = []
         entry = []
         datum = str()
@@ -31,7 +31,20 @@ class Matrix:
 
         print("\nData load successful.\n")
 
-                     
+    def __str__(self):
+        entry = ""
+        entries = ""
+        j = 1
+        for i in range(len(self._product_data_raw)):
+            if self._product_data_raw[i] == '\n':
+                entries += f"{j}. {entry}\n"
+                entry = ""
+                j += 1 
+            else:
+                entry += self._product_data_raw[i]
+
+        return entries 
+                           
 def main():
 
     print("\nWelcome to Arvin's Advanced Shopping-Data Mangement System.")
@@ -58,20 +71,19 @@ def main():
             matrix = Matrix("product_data.txt")
 
         elif user_option == 2:
-            if 'matrix' in globals():
-                #print(matrix)
-                pass
+            if 'matrix' in locals():
+                print(f"\n{matrix}")
             else:
-                print("Error: Data must be loaded first")
+                print("\nError: Data must be loaded first\n")
 
         elif user_option == 3: # Insert 
-            if 'matrix' in globals():
+            if 'matrix' in locals():
                 #position = int(input("Position: "))
                 #matrix.insert(position)
                 pass
 
         elif user_option == 4: # Update 
-            if 'matrix' in globals():
+            if 'matrix' in locals():
                 #line_number = int(input("Line number: "))
                 #matrix.update(line_number)
                 pass
@@ -79,7 +91,7 @@ def main():
                 print("Error: Data must be loaded first")
 
         elif user_option == 5: # Delete 
-            if 'matrix' in globals():
+            if 'matrix' in locals():
                 #line_number = int(input("Line number: "))
                 #matrix.delete(line_number)
                 pass
@@ -87,7 +99,7 @@ def main():
                 print("Error: Data must be loaded first")
 
         elif user_option == 6: # Search
-            if 'matrix' in globals():
+            if 'matrix' in locals():
                 #search_attribute = 'foo'
                 #value = 'bar'
                 #matrix.search(search_attribute, value)
@@ -96,7 +108,7 @@ def main():
                 print("Error: Data must be loaded first")
 
         elif user_option == 7: # Search
-            if 'matrix' in globals():
+            if 'matrix' in locals():
                 #matrix.sort()
                 pass
             else: 
