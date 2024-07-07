@@ -10,41 +10,57 @@ class Matrix:
         self._product_data_raw = fp.read()
         self._product_data_organized = []
         entry = []
-        datum = str()
+        attribute = str()
         
         for i in range(len(self._product_data_raw)):
                 if self._product_data_raw[i] == '\n':
-                    entry.append(datum)
+                    entry.append(attribute.strip())
                     self._product_data_organized.append(entry)
                     entry = []
-                    datum = ""
+                    attribute = ""
                 elif self._product_data_raw[i] == ',' and self._product_data_raw[i+1] == ' ':
                     i += 1
-                    entry.append(datum)
-                    datum = ""
+                    entry.append(attribute.strip())
+                    attribute = ""
                 else:
-                    datum += self._product_data_raw[i]
-
-        if datum:
-            entry.append(datum)
+                    attribute += self._product_data_raw[i]
+        
+        if attribute:
+            entry.append(attribute)
             self._product_data_organized.append(entry)
+        
 
         print("\nData load successful.\n")
 
     def __str__(self):
-        entry = ""
         entries = ""
-        j = 1
-        for i in range(len(self._product_data_raw)):
-            if self._product_data_raw[i] == '\n':
-                entries += f"{j}. {entry}\n"
-                entry = ""
-                j += 1 
-            else:
-                entry += self._product_data_raw[i]
+        for i in range(len(self._product_data_organized)):
+            entries += f"{i+1}. "
+            for j in range(4):
+                entries += f" {self._product_data_organized[i][j]}"
+                if j < 3:
+                    entries += ','
+            entries += '\n'
 
-        return entries 
-                           
+        return entries
+    
+    def insert(self, position):
+        print("Enter the product attributes.")
+        
+        product = []
+        name = str(input("Name: "))
+        price = str(input("Price: "))
+        category = str(input("Category: "))
+        identifier = str(input("ID: "))
+        print("\n")
+
+        product.append(identifier)
+        product.append(name)
+        product.append(price)
+        product.append(category)
+
+        self._product_data_organized.insert(position - 1, product)
+                         
 def main():
 
     print("\nWelcome to Arvin's Advanced Shopping-Data Mangement System.")
@@ -70,7 +86,7 @@ def main():
         elif user_option == 1: # Load product data
             matrix = Matrix("product_data.txt")
 
-        elif user_option == 2:
+        elif user_option == 2: # Display product data
             if 'matrix' in locals():
                 print(f"\n{matrix}")
             else:
@@ -78,9 +94,8 @@ def main():
 
         elif user_option == 3: # Insert 
             if 'matrix' in locals():
-                #position = int(input("Position: "))
-                #matrix.insert(position)
-                pass
+                position = int(input("Insertion position: "))
+                matrix.insert(position)
 
         elif user_option == 4: # Update 
             if 'matrix' in locals():
