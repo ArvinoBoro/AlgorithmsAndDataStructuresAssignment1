@@ -7,88 +7,86 @@ class Matrix:
             print("\nError: File not found.\n")
             return None
         
-        self._product_data_raw = fp.read()
-        self._product_data_organized = []
+        self._data_raw = fp.read()
+        self._data_organized = []
+        self._data_is_sorted = False
         entry = []
         attribute = str()
         
-        for i in range(len(self._product_data_raw)):
-                if self._product_data_raw[i] == '\n':
+        for i in range(len(self._data_raw)):
+                if self._data_raw[i] == '\n':
                     entry.append(attribute.strip())
-                    self._product_data_organized.append(entry)
+                    self._data_organized.append(entry)
                     entry = []
                     attribute = ""
-                elif self._product_data_raw[i] == ',' and self._product_data_raw[i+1] == ' ':
+                elif self._data_raw[i] == ',' and self._data_raw[i+1] == ' ':
                     i += 1
                     entry.append(attribute.strip())
                     attribute = ""
                 else:
-                    attribute += self._product_data_raw[i]
+                    attribute += self._data_raw[i]
         
         if attribute:
             entry.append(attribute)
-            self._product_data_organized.append(entry)
-        
+            self._data_organized.append(entry)
 
-        print("\nData load successful.\n")
-
+        print("Data load successful.\n")
+    
     def __str__(self):
         entries = ""
-        for i in range(len(self._product_data_organized)):
+        for i in range(len(self._data_organized)):
             entries += f"{i+1}. "
             for j in range(4):
-                entries += f" {self._product_data_organized[i][j]}"
+                entries += f" {self._data_organized[i][j]}"
                 if j < 3:
                     entries += ','
             entries += '\n'
 
         return entries
     
-    def insert(self, position):
-        print("Enter the product attributes.")
-        
-        product = []
-        name = str(input("Name: "))
-        price = str(input("Price: "))
-        category = str(input("Category: "))
-        identifier = str(input("ID: "))
-        print("\n")
+    def insert(self, position, *argv):
 
-        product.append(identifier)
-        product.append(name)
-        product.append(price)
-        product.append(category)
-
-        self._product_data_organized.insert(position - 1, product)
-
-    def update(self, line_number):
+        if not isinstance(position, int):
+            print("Error: The line number is not an integer.\n")
+            return None
         
-        print(f"\nEnter the new attributes of product {line_number}. Press return for an attribute to remain unchanged.\n")
-        name = str(input("Name: "))
-        price = str(input("Price: "))
-        category = str(input("Category: "))
-        identifier = str(input("ID: "))
+        if not len(argv) == len(self._data_organized[position]):
+            return None 
+
+        if position >= len(self._data_organized) or position < 1:
+            print("Error: The position is out of range.\n") 
+            return None
+
+        self._data_organized.insert(position - 1, argv)
+        return 1 
+
+    def update(self, line_number, *argv): # 4
+        if not isinstance(line_number, int):
+            print("Error: The line number is not an integer.\n")
+            return None
         
-        if not name == '\n':
-            self._product_data_organized[line_number - 1][1] = name
-        if not price == '\n':
-            self._product_data_organized[line_number - 1][2] = price
-        if not category == '\n': 
-            self._product_data_organized[line_number - 1][3] = category
-        if not identifier == '\n':
-            self._product_data_organized[line_number - 1][0] = identifier 
-            print("\n")
+        if line_number > len(self._data_organized) or line_number < 1:
+            print("Error: The line number is out of range.\n")
+            return None
+
+        for i in range(len(argv)):
+            if not argv[i] == "NO":
+                self._data_organized[line_number - 1][i] = argv[i]
+        
+        return 1
+
 
     def delete(self, line_number):  
         if not isinstance(line_number, int):
-            print("Error: Input is not an integer.")
+            print("Error: The line number is not an integer.\n")
             return None
 
-        if line_number > len(self._product_data_organized) or line_number < 1:
-            print("Error: Invalid index \n")
+        if line_number > len(self._data_organized) or line_number < 1:
+            print("Error: The line number is out of range.\n")
             return None
             
-        del self._product_data_organized[line_number - 1]
+        del self._data_organized[line_number - 1]
+        return 1 
     
                          
 def main():
@@ -120,26 +118,61 @@ def main():
             if 'matrix' in locals():
                 print(f"\n{matrix}")
             else:
-                print("\nError: Data must be loaded first\n")
+                print("Error: Data must be loaded first.\n")
 
         elif user_option == 3: # Insert 
             if 'matrix' in locals():
                 position = int(input("Insertion position: "))
-                matrix.insert(position)
+                print(f"Enter the attributes of the product. A name and valid price must be entered. The category and identifier can be left blank with the return key.\n")
+                while True:
+                    name = str(input("Name: "))
+                    if not name == '':
+                        break
+
+                while True:
+                    try:
+                        price = str(input("Price: "))
+                        float(price)
+                        break
+                    except ValueError:   
+                        print("Error: Price must be an integer or float.")
+                
+                category = str(input("Category: "))
+                identifier = str(input("ID: "))
+                
+                if matrix.insert(position, identifier, name, price, category):
+                    print("Product insertion successful.\n")
+            else:
+                print("Error: Data must be loaded first.\n")
 
         elif user_option == 4: # Update 
             if 'matrix' in locals():
-                line_number = int(input("Product position: "))
-                matrix.update(line_number)
+                line_number = int(input("Product line number: "))
+                print(f"Enter the new attributes of product {line_number}. A valid price must be entered. All other attributes can be left unchanged by entering 'NO'.\n")
+                name = str(input("Name: "))
+                while True:
+                    try:
+                        price = str(input("Price: "))
+                        float(price)
+                        break
+                    except ValueError:
+                        print("Price must be an integer or float.")
+                category = str(input("Category: "))
+                identifier = str(input("ID: "))
+                
+                if matrix.update(line_number, identifier, name, price, category):
+                    print("Product update succesful.\n") 
+                
             else: 
-                print("Error: Data must be loaded first")
+                print("Error: Data must be loaded first.\n")
 
         elif user_option == 5: 
             if 'matrix' in locals():
                 line_number = int(input("Line number: "))
-                matrix.delete(line_number)
+                if matrix.delete(line_number):
+                    print("Product deletion successful.\n")
             else: 
-                print("Error: Data must be loaded first")
+                print("Error: Data must be loaded first.\n")
 
         elif user_option == 6: # Search
             if 'matrix' in locals():
@@ -148,17 +181,17 @@ def main():
                 #matrix.search(search_attribute, value)
                 pass
             else: 
-                print("Error: Data must be loaded first")
+                print("Error: Data must be loaded first.\n")
 
         elif user_option == 7: # Sort
             if 'matrix' in locals():
                 #matrix.sort()
                 pass
             else: 
-                print("\nError: Data must be loaded first\n")
+                print("Error: Data must be loaded first.\n")
 
         else: 
-            print("\nError: Invalid input\n")
+            print("Error: Invalid input.\n")
 
 
 if __name__=='__main__': 
