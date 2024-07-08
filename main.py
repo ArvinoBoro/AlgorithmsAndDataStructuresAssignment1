@@ -31,6 +31,7 @@ class Matrix:
             self._data_organized.append(entry)
 
         print("Data load successful.\n")
+
     
     def __str__(self):
         entries = ""
@@ -88,7 +89,24 @@ class Matrix:
         del self._data_organized[line_number - 1]
         return 1 
     
-                         
+    def search(self, i, value):
+
+        value_found = False
+        
+        for j in range(len(self._data_organized)):
+            if value == self._data_organized[j][i - 1]: 
+                print(f"Found entry at {j+1}: {self._data_organized[j]}")
+                value_found = True
+                
+        if not value_found: 
+            print(f"No such attribute found.\n")
+        else:
+            print('\n')
+        
+    def get_entry_length(self):
+        return len(self._data_organized[0])
+
+                          
 def main():
 
     print("\nWelcome to Arvin's Advanced Shopping-Data Mangement System.")
@@ -122,8 +140,17 @@ def main():
 
         elif user_option == 3: # Insert 
             if 'matrix' in locals():
-                position = int(input("Insertion position: "))
-                print(f"Enter the attributes of the product. A name and valid price must be entered. The category and identifier can be left blank with the return key.\n")
+                while True:
+                    try:
+                        position = int(input("Insertion position: "))
+                        if position < matrix.get_entry_length() and position > 1:   
+                            break
+                        else:
+                            print("Error: The insertion position is out of bounds.")
+                    except ValueError:
+                        print("Error: The insertion position is not an integer.")
+
+                print(f"Enter the attributes of the product. A name and valid price must be entered. The category and identifier can be left blank with the return key.")
                 while True:
                     name = str(input("Name: "))
                     if not name == '':
@@ -174,12 +201,17 @@ def main():
             else: 
                 print("Error: Data must be loaded first.\n")
 
-        elif user_option == 6: # Search
+        elif user_option == 6: 
             if 'matrix' in locals():
-                #search_attribute = 'foo'
-                #value = 'bar'
-                #matrix.search(search_attribute, value)
-                pass
+                print('''
+1. ID
+2. Name
+3. Price
+4. Category
+''')
+                attribute_type = int(input("Enter the attribute type: "))
+                value = str(input("Enter the attribute value: "))
+                matrix.search(attribute_type, value)
             else: 
                 print("Error: Data must be loaded first.\n")
 
