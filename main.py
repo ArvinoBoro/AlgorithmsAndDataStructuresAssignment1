@@ -102,11 +102,20 @@ class Matrix:
             print(f"No such attribute found.\n")
         else:
             print('\n')
+
+    def bubble_sort(self, k):
+
+        for i in range(1, len(self._data_organized)):
+            for j in range(len(self._data_organized) - i):
+                if self._data_organized[j][k] > self._data_organized[j+1][k]:
+                    temp = self._data_organized[j+1] 
+                    self._data_organized[j+1] = self._data_organized[j]
+                    self._data_organized[j] = temp
+        return 1
         
     def get_entry_length(self):
         return len(self._data_organized[0])
-
-                          
+                    
 def main():
 
     print("\nWelcome to Arvin's Advanced Shopping-Data Mangement System.")
@@ -120,7 +129,7 @@ def main():
 4. Update 
 5. Delete 
 6. Search 
-7. Sort 
+7. Sort by Price
 0. Quit 
         """)
 
@@ -217,8 +226,9 @@ def main():
 
         elif user_option == 7: # Sort
             if 'matrix' in locals():
-                #matrix.sort()
-                pass
+                if matrix.bubble_sort(2):
+                    print("Product data successfully sorted.")
+                
             else: 
                 print("Error: Data must be loaded first.\n")
 
