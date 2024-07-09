@@ -3,12 +3,12 @@ class Matrix:
     
     def __init__(self, file_name):
         try:
-            fp = open(file_name, 'r+')
+            file_proxy = open(file_name, 'r+')
         except: 
             print("\nError: File not found.\n")
             return None
         
-        self._data_raw = fp.read()
+        self._data_raw = file_proxy.read()
         self._data_organized = []
         self._data_is_sorted = False
         entry = []
