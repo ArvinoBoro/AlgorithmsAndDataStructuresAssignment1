@@ -1,3 +1,4 @@
+import time 
 class Matrix:
     
     def __init__(self, file_name):
@@ -51,7 +52,7 @@ class Matrix:
             print("Error: The line number is not an integer.\n")
             return None
         
-        if not len(argv) == len(self._data_organized[position]):
+        if not len(argv) == len(self._data_organized[0]):
             return None 
 
         if position >= len(self._data_organized) or position < 1:
@@ -102,15 +103,27 @@ class Matrix:
                     results.append(j + 1)        
         return results
 
-    def bubble_sort(self, k):
+    def bubble_sort(self, k, sort_in_ascending_order):
+        start = time.time()
+
         for i in range(1, len(self._data_organized)):
             for j in range(len(self._data_organized) - i):
-                if self._data_organized[j][k] > self._data_organized[j+1][k]:
+                if sort_in_ascending_order and self._data_organized[j][k] > self._data_organized[j+1][k]:
                     temp = self._data_organized[j+1] 
                     self._data_organized[j+1] = self._data_organized[j]
                     self._data_organized[j] = temp
+                elif not sort_in_ascending_order and self._data_organized[j][k] < self._data_organized[j+1][k]:
+                    temp = self._data_organized[j+1] 
+                    self._data_organized[j+1] = self._data_organized[j]
+                    self._data_organized[j] = temp
+        end = time.time()
+        print(f"Sorting algorithm runtime: {end - start} s")
+
         return 1
         
-    def get_entry_length(self):
+    def get_number_of_columns(self):
         return len(self._data_organized[0])
+    
+    def get_number_of_rows(self):
+        return len(self._data_organized)
                     

@@ -31,7 +31,7 @@ def main():
                 while True:
                     try:
                         position = int(input("Insertion position: "))
-                        if position < matrix.get_entry_length() and position > 1:   
+                        if position <= matrix.get_number_of_rows() and position > 0:   
                             break
                         else:
                             print("Error: The insertion position is out of bounds.")
@@ -114,7 +114,15 @@ def main():
 
         elif user_option == 7: # Sort
             if 'matrix' in locals():
-                if matrix.bubble_sort(2):
+                print("0. Descending order")
+                print("1. Ascending order")
+                while True:
+                    try:
+                        sort_in_ascending_order = bool(int(input("Sort order: ")))
+                        break
+                    except ValueError: 
+                        print("Enter 0 or 1.")
+                if matrix.bubble_sort(2, sort_in_ascending_order):
                     print("Product data sorted successfuly.")     
             else: 
                 print("Error: Data must be loaded first.")
